@@ -19,6 +19,8 @@ You can input a string contains 4 numbers (no spaces, tabs or other white charac
 - Character Error: Every character must be number from 0 to 9
 - Repeat Error: The characters must be different to another
 
+Plus, you'll got some star symbol and a number at the random position for hint if you type `h` or `H` and hit Enter / return. It won't cost your chances.
+
 Or, you'll get the correct result: `<< ?A?B`.
 
 You only have 10 chances, if you guessed right, the congrats message will appear: 
