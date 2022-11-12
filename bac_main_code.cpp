@@ -5,7 +5,9 @@
 #include <set>
 #include <algorithm>
 #include <utility>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 string answer;
 string generateRandomStart()
 {
@@ -17,6 +19,8 @@ string generateRandomStart()
 }
 string checkGuessValid(string userGuess)
 {
+	if (userGuess == "h" || userGuess == "H")
+		return "HintFlag";
 	if (userGuess.size() != 4)
 		return "Length Error: You must give 4 character";
 	for (int i = 0; i < userGuess.size(); i++)
@@ -43,6 +47,15 @@ pair<int, int> getResult(string userGuess)
 	}
 	return pair<int, int>(As, Bs);
 }
+string getHint()
+{
+	unsigned randomSeed = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count();
+	mt19937 randomNum(randomSeed);
+	string result = "****";
+	int position = randomNum() % 4;
+	result[position] = answer[position];
+	return result;
+}
 void doGuess()
 {
 	for (int i = 1; i <= 10; i++)
@@ -53,6 +66,11 @@ void doGuess()
 		cout << "[" << i << "]" << ">> ";
 		cin >> userGuess;
 		report = checkGuessValid(userGuess);
+		if (report == "HintFlag")
+		{
+			cout << "   << " << getHint() << endl;
+			goto loop_begin;
+		}
 		if (!report.empty())
 		{
 			cout << "   << " << report << endl;
