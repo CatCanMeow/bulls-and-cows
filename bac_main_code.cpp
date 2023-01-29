@@ -2,12 +2,17 @@
 #include <string>
 #include <random>
 #include <cctype>
-#include <set>
+// #include <set>
 #include <algorithm>
 #include <utility>
 #include <chrono>
 using namespace std;
 using namespace std::chrono;
+const string INDENT = "   << ";
+const string HintF = "HintFlag", LenErr = "Length Error: You must give 4 character", 
+			 ChErr = "Character Error: Every character must be number from 0 to 9", 
+			 RepErr = "Repeat Error: The characters must be different to another", 
+			 OK = string();
 string answer;
 string generateRandomStart()
 {
@@ -20,18 +25,23 @@ string generateRandomStart()
 string checkGuessValid(string userGuess)
 {
 	if (userGuess == "h" || userGuess == "H")
-		return "HintFlag";
+		return /* "HintFlag" */ HintF;
 	if (userGuess.size() != 4)
-		return "Length Error: You must give 4 character";
+		return /* Length Error: You must give 4 character */ LenErr;
 	for (int i = 0; i < userGuess.size(); i++)
 		if (!isdigit(userGuess[i]))
-			return "Character Error: Every character must be number from 0 to 9";
+			return /* "Character Error: Every character must be number from 0 to 9" */ ChErr;
+	/*
 	set<char> tmp;
 	for (int i = 0; i < userGuess.size(); i++)
 		tmp.insert(userGuess[i]);
 	if (tmp.size() != userGuess.size())
 		return "Repeat Error: The characters must be different to another";
-	return string();
+	*/
+	string :: iterator ip = unique(userGuess.begin(), userGuess.end());
+	if (string(userGuess.begin(), ip).size() < userGuess.size())
+		return /* "Repeat Error: The characters must be different to another" */ RepErr;
+	return /* string() */ OK;
 }
 pair<int, int> getResult(string userGuess)
 {
@@ -58,7 +68,7 @@ string getHint()
 }
 void doGuess()
 {
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= 10; /* i++ */)
 	{
 		loop_begin: ;
 		string userGuess, report;
@@ -68,23 +78,26 @@ void doGuess()
 		report = checkGuessValid(userGuess);
 		if (report == "HintFlag")
 		{
-			cout << "   << " << getHint() << endl;
-			goto loop_begin;
+			cout << INDENT << getHint() << endl;
+			// goto loop_begin;
+			continue;
 		}
 		if (!report.empty())
 		{
-			cout << "   << " << report << endl;
-			goto loop_begin;
+			cout << INDENT << report << endl;
+			// goto loop_begin;
+			continue;
 		}
 		result = getResult(userGuess);
-		cout << "   << " << result.first << "A" << result.second << "B" << endl;
+		cout << INDENT << result.first << "A" << result.second << "B" << endl;
 		if (result.first == 4 && result.second == 0)
 		{
-			cout << "   << You guessed right" << endl;
+			cout << INDENT << "You guessed right" << endl;
 			return;
 		}
+		i++;
 	}
-	cout << "   << You lost! The correct answer is: " << answer << endl;
+	cout << INDENT << "You lost! The correct answer is: " << answer << endl;
 }
 int main()
 {
